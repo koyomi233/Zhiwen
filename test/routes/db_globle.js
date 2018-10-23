@@ -37,7 +37,7 @@ beforeEach(function(done){
     });
     var picture2 = new Picture({
         _id: '5bcde78efb6fc060274aecbb',
-        collectionid: '5bceef76b42bc703dde7da07',
+        collectionid: '5bcef1bff16ce3040a5d7dcb',
         name: 'City Life',
         describe: '',
         comment: []

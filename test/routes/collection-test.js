@@ -114,5 +114,35 @@ describe('Collection', () => {
                     done();
                 });
         });
+        it('should return a message and update collections', function (done) {
+            chai.request(server)
+                .delete('/collection/5bcef1bff16ce3040a5d7dcb')
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message').equal('Collection and its Picture Successfully Deleted!');
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/picture')
+                .end(function(err, res) {
+                    let result1 = _.map(res.body, (pic) => {
+                        return { _id: pic._id,
+                            name: pic.name };
+                    }  );
+                    expect(result1).to.not.include( { _id: '5bcde78efb6fc060274aecbb', name: 'City Life'  } );
+                });
+            chai.request(server)
+                .get('/collection')
+                .end(function(err, res) {
+                    let result1 = _.map(res.body, (board) => {
+                        return { category: board.category,
+                            name: board.name };
+                    }  );
+                    expect(result1).to.not.include( { category: 'photography', name: 'Girls!'  } );
+                    done();
+                });
+        });
     })
 });

@@ -17,18 +17,21 @@ describe('Collection', () => {
         });
 
         var collection1 = new datastore({
+            _id: '5bceef76b42bc703dde7da06',
             category: 'Animation',
             name: 'Japanese illustration',
             size: 123,
             follow: 7
         });
         var collection2 = new datastore({
+            _id: '5bceef76b42bc703dde7da07',
             category: 'sketch',
             name: 'Black and White',
             size: 34,
             follow: 0
         });
         var collection3 = new datastore({
+            _id: '5bcef1bff16ce3040a5d7dcb',
             category: 'photography',
             name: 'Girls!',
             size: 85,
@@ -109,6 +112,37 @@ describe('Collection', () => {
                             name: board.name };
                     }  );
                     expect(result).to.include( { category: 'Travel', name: 'Beijing'  } );
+                    done();
+                });
+        });
+    })
+    describe('PUT /collection/:id/attentionAdd', () => {
+        it('should return a message and follow + 1', function (done) {
+            chai.request(server)
+                .put('/collection/5bceef76b42bc703dde7da06/attentionAdd')
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    let board = res.body.data;
+                    expect(board).to.include({_id: '5bceef76b42bc703dde7da06', follow: 8});
+                    done();
+                });
+        });
+        it('should return a message for invalid collection id', function (done) {
+            chai.request(server)
+                .put('/collection/00000000000000/attentionAdd')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message','Collection NOT Found!' ) ;
+                    done();
+                });
+        });
+    })
+    describe('DELETE /collection/:id', () => {
+        it('should return a message for invalid collection id', function (done) {
+            chai.request(server)
+                .delete('/collection/00000000000000')
+                .end(function(err, res) {
+                    expect(res.body).to.have.property('message', 'Collection NOT DELETED!');
                     done();
                 });
         });

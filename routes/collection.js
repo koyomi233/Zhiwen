@@ -2,23 +2,6 @@ let Collection = require('../models/collection');
 let Picture = require('../models/picture');
 let express = require('express');
 let router = express.Router();
-let mongoose = require('mongoose');
-
-var mongodbUri ='mongodb://guest:picture_web123@ds137913.mlab.com:37913/picture_web_db';
-
-mongoose.connect(mongodbUri);
-
-//mongoose.connect('mongodb://localhost:27017/pictureWebDB');
-
-let db = mongoose.connection;
-
-db.on('error', function (err) {
-    console.log('Unable to Connect to [ ' + db.name + ' ]', err);
-});
-
-db.once('open', function () {
-    console.log('Successfully Connected to [ ' + db.name + ' ] on mlab.com');
-});
 
 
 //Get all boards

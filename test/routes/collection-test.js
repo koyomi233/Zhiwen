@@ -7,41 +7,9 @@ chai.use(chaiHttp);
 chai.use(require('chai-things'));
 let _ = require('lodash' );
 
-var datastore = require('../../models/collection');
+require('./db_globle');
 
 describe('Collection', () => {
-    beforeEach(function(){
-        datastore.remove().exec(function(err){
-            if (err)
-                console.log(err);
-        });
-
-        var collection1 = new datastore({
-            _id: '5bceef76b42bc703dde7da06',
-            category: 'Animation',
-            name: 'Japanese illustration',
-            size: 123,
-            follow: 7
-        });
-        var collection2 = new datastore({
-            _id: '5bceef76b42bc703dde7da07',
-            category: 'sketch',
-            name: 'Black and White',
-            size: 34,
-            follow: 0
-        });
-        var collection3 = new datastore({
-            _id: '5bcef1bff16ce3040a5d7dcb',
-            category: 'photography',
-            name: 'Girls!',
-            size: 85,
-            follow: 12
-        });
-
-        collection1.save();
-        collection2.save();
-        collection3.save();
-    });
     describe('GET /collection', () => {
         it('should return all the collections in an array', function (done) {
             chai.request(server)

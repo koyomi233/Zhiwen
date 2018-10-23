@@ -35,17 +35,9 @@ describe('Collection', () => {
             follow: 12
         });
 
-        var collection4 = new datastore({
-            category: 'UI/UX',
-            name: 'Illustration',
-            size: 0,
-            follow: 0
-        })
-
         collection1.save();
         collection2.save();
         collection3.save();
-        collection4.save();
     });
     describe('GET /collection', () => {
         it('should return all the collections in an array', function (done) {
@@ -72,13 +64,12 @@ describe('Collection', () => {
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.a('array');
-                    expect(res.body.length).to.equal(2);
+                    expect(res.body.length).to.equal(1);
                     let  result = _.map(res.body, (board) => {
                         return { category: board.category,
                             name: board.name }
                     });
                     expect(result).to.include( { category: 'Animation', name: 'Japanese illustration'  } );
-                    expect(result).to.include( { category: 'UI/UX', name: 'Illustration'  } );
                     done();
                 });
         });
@@ -88,6 +79,36 @@ describe('Collection', () => {
                 .end(function(err, res) {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('message', 'Collection NOT Found!' ) ;
+                    done();
+                });
+        });
+    });
+    describe('POST /collection', () => {
+        it('should return confirmation message and update datastore', function (done) {
+            let board = {
+                category: 'Travel' ,
+                name: 'Beijing',
+                size: 14,
+                follow: 2
+            };
+            chai.request(server)
+                .post('/collection')
+                .send(board)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message').equal('Collection Successfully Added!' );
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/collection')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (board) => {
+                        return { category: board.category,
+                            name: board.name };
+                    }  );
+                    expect(result).to.include( { category: 'Travel', name: 'Beijing'  } );
                     done();
                 });
         });

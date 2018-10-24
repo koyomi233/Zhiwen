@@ -6,7 +6,6 @@ var Collection = require('../../models/collection');
 var Picture = require('../../models/picture');
 var User = require('../../models/user');
 
-
 chai.use(chaiHttp);
 chai.use(require('chai-things'));
 let _ = require('lodash' );
@@ -44,11 +43,21 @@ describe('Picture', () => {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('message')
                         .equal('character is collected in Japanese illustration' );
+                    done();
+                });
+        });
+        it('should return a message for invalid id', function () {
+            chai.request(server)
+                .get('/picture/collection/0000000000')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message', 'No Such Picture!' );
                     Collection.collection.drop();
                     Picture.collection.drop();
                     User.collection.drop();
                     done();
                 });
         });
-    })
+    });
+    
 })

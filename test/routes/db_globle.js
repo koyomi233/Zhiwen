@@ -3,9 +3,6 @@ var Picture = require('../../models/picture');
 var User = require('../../models/user');
 
 beforeEach(function(done){
-    Collection.collection.drop();
-    Picture.collection.drop();
-    User.collection.drop();
 
     var collection1 = new Collection({
         _id: '5bceef76b42bc703dde7da06',
@@ -89,3 +86,5 @@ beforeEach(function(done){
 
     done();
 });
+
+

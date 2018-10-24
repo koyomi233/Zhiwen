@@ -2,6 +2,10 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../../bin/www');
 let expect = chai.expect;
+var Collection = require('../../models/collection');
+var Picture = require('../../models/picture');
+var User = require('../../models/user');
+
 
 chai.use(chaiHttp);
 chai.use(require('chai-things'));
@@ -25,6 +29,24 @@ describe('Picture', () => {
                     expect(result).to.include( { _id: '5bcde76cfb6fc060274aecb2', name: 'City'  } );
                     expect(result).to.include( { _id: '5bcde78efb6fc060274aecbb', name: 'City Life'  } );
                     expect(result).to.include( { _id: '5bcde7e0fb6fc060274aecfe', name: 'character'  } );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
+        });
+    });
+    describe('GET /picture/collection/:id', () => {
+        it('should return a collection where the picture exists', function (done) {
+            chai.request(server)
+                .get('/picture/collection/5bcde7e0fb6fc060274aecfe')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message')
+                        .equal('character is collected in Japanese illustration' );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
                     done();
                 });
         });

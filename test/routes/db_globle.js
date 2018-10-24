@@ -3,7 +3,6 @@ var Picture = require('../../models/picture');
 var User = require('../../models/user');
 
 beforeEach(function(done){
-
     var collection1 = new Collection({
         _id: '5bceef76b42bc703dde7da06',
         category: 'Animation',

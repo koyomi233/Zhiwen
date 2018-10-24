@@ -129,5 +129,40 @@ describe('Picture', () => {
                     });
             });
         });
-    })
+    });
+    describe('PUT /picture/:id/addComment', () => {
+        it('should return a mesage for invaild id', function (done) {
+            chai.request(server)
+                .get('/picture/names/Marvel')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message', 'Picture NOT Found!' );
+                    done();
+                });
+        });
+        it('should return a message and update the comment of the picture', function (done) {
+            chai.request(server)
+                .put('/picture/5bcde7e0fb6fc060274aecfe/addComment')
+                .send({'comment': 'zack'})
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message').equal('Comment Saved!' );
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/picture')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (pic) => {
+                        return { name: pic.name, comment: pic.comment };
+                    }  );
+                    expect(result).to.include( { name: 'character', comment:['zack']  } );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
+        });
+    });
 })

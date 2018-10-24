@@ -165,14 +165,46 @@ describe('Picture', () => {
                 });
         });
     });
-    // describe('DELETE /picture/:id', () => {
-    //     it('should return a message for invalid collection id', function (done) {
-    //         chai.request(server)
-    //             .delete('/collection/00000000000000')
-    //             .end(function(err, res) {
-    //                 expect(res.body).to.have.property('message', 'Picture NOT Found!');
-    //                 done();
-    //             });
-    //     });
-    // })
+    describe('DELETE /picture/:id', () => {
+        it('should return a message for invalid collection id', function (done) {
+            chai.request(server)
+                .delete('/picture/00000000000000')
+                .end(function(err, res) {
+                    expect(res.body).to.have.property('message', 'No such Picture, Picture NOT DELETED!');
+                    done();
+                });
+        });
+        it('should return a message and update pictures', function (done) {
+            chai.request(server)
+                .delete('/picture/5bcde7e0fb6fc060274aecfe')
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message',
+                        'Picture Successfully DELETED! The size of Japanese illustration now is 122');
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/collection')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (board) => {
+                        return { name: board.name, size: board.size };
+                    }  );
+                    expect(result).to.include( { name: 'Japanese illustration', size: 122  } );
+                });
+            chai.request(server)
+                .get('/picture')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (pic) => {
+                        return { name: pic.name };
+                    }  );
+                    expect(result).to.not.include( { name: 'character' } );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
+        });
+    })
 })

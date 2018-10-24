@@ -46,7 +46,7 @@ describe('Picture', () => {
                     done();
                 });
         });
-        it('should return a message for invalid id', function () {
+        it('should return a message for invalid id', function (done) {
             chai.request(server)
                 .get('/picture/collection/0000000000')
                 .end(function(err, res) {
@@ -106,28 +106,28 @@ describe('Picture', () => {
                         .equal('Picture Successfully Added! The size of Japanese illustration now is 124' );
                     done();
                 });
-            after(function  (done) {
-                chai.request(server)
-                    .get('/collection')
-                    .end(function(err, res) {
-                        let result = _.map(res.body, (board) => {
-                            return { name: board.name, size: board.size };
-                        }  );
-                        expect(result).to.include( { name: 'Japanese illustration', size: 124  } );
-                    });
-                chai.request(server)
-                    .get('/picture')
-                    .end(function(err, res) {
-                        let result = _.map(res.body, (pic) => {
-                            return { name: pic.name };
-                        }  );
-                        expect(result).to.include( { name: 'Miku'  } );
-                        Collection.collection.drop();
-                        Picture.collection.drop();
-                        User.collection.drop();
-                        done();
-                    });
-            });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/collection')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (board) => {
+                        return { name: board.name, size: board.size };
+                    }  );
+                    expect(result).to.include( { name: 'Japanese illustration', size: 124  } );
+                });
+            chai.request(server)
+                .get('/picture')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (pic) => {
+                        return { name: pic.name };
+                    }  );
+                    expect(result).to.include( { name: 'Miku'  } );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
         });
     });
     describe('PUT /picture/:id/addComment', () => {
@@ -165,4 +165,14 @@ describe('Picture', () => {
                 });
         });
     });
+    // describe('DELETE /picture/:id', () => {
+    //     it('should return a message for invalid collection id', function (done) {
+    //         chai.request(server)
+    //             .delete('/collection/00000000000000')
+    //             .end(function(err, res) {
+    //                 expect(res.body).to.have.property('message', 'Picture NOT Found!');
+    //                 done();
+    //             });
+    //     });
+    // })
 })

@@ -88,5 +88,46 @@ describe('Picture', () => {
                     done();
                 });
         });
+    });
+    describe('POST /picture', () => {
+        it('should return confirmation message and update datastore', function (done) {
+            let pic = {
+                collectionid: '5bceef76b42bc703dde7da06' ,
+                name: 'Miku',
+                describe: [],
+                comment: []
+            };
+            chai.request(server)
+                .post('/picture')
+                .send(pic)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message')
+                        .equal('Picture Successfully Added! The size of Japanese illustration now is 124' );
+                    done();
+                });
+            after(function  (done) {
+                chai.request(server)
+                    .get('/collection')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (board) => {
+                            return { name: board.name, size: board.size };
+                        }  );
+                        expect(result).to.include( { name: 'Japanese illustration', size: 124  } );
+                    });
+                chai.request(server)
+                    .get('/picture')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (pic) => {
+                            return { name: pic.name };
+                        }  );
+                        expect(result).to.include( { name: 'Miku'  } );
+                        Collection.collection.drop();
+                        Picture.collection.drop();
+                        User.collection.drop();
+                        done();
+                    });
+            });
+        });
     })
 })

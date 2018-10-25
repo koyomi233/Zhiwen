@@ -3,6 +3,7 @@ var Picture = require('../../models/picture');
 var User = require('../../models/user');
 
 beforeEach(function(done){
+
     var collection1 = new Collection({
         _id: '5bceef76b42bc703dde7da06',
         category: 'Animation',
@@ -53,6 +54,15 @@ beforeEach(function(done){
     picture2.save();
     picture1.save();
 
+    var user1 = new User({
+        _id: '5bcde909fb6fc060274aedf5',
+        name: 'soundtrack',
+        password: '123456',
+        email: '317657452@qq.com',
+        collectionid: [],
+        fans: ['5bcde933fb6fc060274aee1a'],
+        follows: []
+    });
     var user2 = new User({
         _id: '5bcde933fb6fc060274aee1a',
         name: 'koyomi',
@@ -60,16 +70,7 @@ beforeEach(function(done){
         email: '317657452h@sina.com',
         collectionid: [],
         fans: [],
-        follows: []
-    });
-    var user1 = new User({
-        _id: '5bcde909fb6fc060274aedf5',
-        name: 'soundtrack',
-        password: '123456',
-        email: '317657452@qq.com',
-        collectionid: [],
-        fans: [],
-        follows: []
+        follows: ['5bcde909fb6fc060274aedf5']
     });
     var user3 = new User({
         _id: '5bcde96cfb6fc060274aee4c',

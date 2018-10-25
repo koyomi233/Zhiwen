@@ -22,12 +22,11 @@ describe('User', () => {
                     expect(res.body).to.be.a('array');
                     expect(res.body.length).to.equal(3);
                     let result = _.map(res.body, (account) => {
-                        return { name: account.name,
-                            email: account.email}
+                        return { name: account.name }
                     });
-                    expect(result).to.include( { name: 'soundtrack', email: '317657452@qq.com'  } );
-                    expect(result).to.include( { name: 'koyomi', email: '317657452h@sina.com'  } );
-                    expect(result).to.include( { name: 'Shinobu', email: '317657452h@126.com'  } );
+                    expect(result).to.include( { name: 'soundtrack' } );
+                    expect(result).to.include( { name: 'koyomi' } );
+                    expect(result).to.include( { name: 'Shinobu' } );
 
                     User.collection.drop();
                     Collection.collection.drop();
@@ -94,7 +93,7 @@ describe('User', () => {
                 });
         });
     });
-    describe.only('POST /user', () => {
+    describe('POST /user', () => {
         it('should return a message and update users', function (done) {
             let user = {
                 name: 'zack' ,
@@ -128,6 +127,41 @@ describe('User', () => {
                     User.collection.drop();
                     done();
                 });
-        })
+        });
+    });
+    describe('PUT /user/:id/removeFollow', () => {
+        it('should return a message and update users', function (done) {
+            chai.request(server)
+                .put('/user/5bcde933fb6fc060274aee1a/removeFollow')
+                .send({'follows': '5bcde909fb6fc060274aedf5'})
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message')
+                        .equal('You have removed the follow on this user!' );
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/user/317657452@qq.com')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (account) => {
+                        return { fans: account.fans };
+                    }  );
+                    expect(result).to.include( { fans: [] } );
+                });
+            chai.request(server)
+                .get('/user/317657452h@sina.com')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (account) => {
+                        return { follows: account.follows };
+                    }  );
+                    expect(result).to.include( { follows: [] } );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
+        });
     })
 })

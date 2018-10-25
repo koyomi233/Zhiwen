@@ -57,9 +57,9 @@ describe('User', () => {
                 .end(function(err, res) {
                     expect(res).to.have.status(200);
                     expect(res.body).to.have.property('message', 'User NOT Found!' );
-                    Collection.collection.drop();
-                    Picture.collection.drop();
-                    User.collection.drop();
+                    Collection.collection.remove();
+                    Picture.collection.remove();
+                    User.collection.remove();
                     done();
                 });
         });
@@ -86,9 +86,9 @@ describe('User', () => {
                             email: account.email}
                     });
                     expect(result).to.include( { name: 'soundtrack', email: '317657452@qq.com'  } );
-                    Collection.collection.drop();
-                    Picture.collection.drop();
-                    User.collection.drop();
+                    Collection.collection.remove();
+                    Picture.collection.remove();
+                    User.collection.remove();
                     done();
                 });
         });
@@ -122,9 +122,44 @@ describe('User', () => {
                             email: account.email}
                     });
                     expect(result).to.include( { name: 'zack', email: 'zack12345@qq.com' } );
-                    Collection.collection.drop();
-                    Picture.collection.drop();
-                    User.collection.drop();
+                    Collection.collection.remove();
+                    Picture.collection.remove();
+                    User.collection.remove();
+                    done();
+                });
+        });
+    });
+    describe('PUT /user/:id/addFollow', () => {
+        it('should return a message and update users', function (done) {
+            chai.request(server)
+                .put('/user/5bcde96cfb6fc060274aee4c/addFollow')
+                .send({'follows': '5bcde909fb6fc060274aedf5'})
+                .end(function (err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message')
+                        .equal('You have followed a new user!' );
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/user/317657452@qq.com')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (account) => {
+                        return { fans: account.fans };
+                    }  );
+                    expect(result).to.include( { fans: ['5bcde933fb6fc060274aee1a', '5bcde96cfb6fc060274aee4c'] } );
+                });
+            chai.request(server)
+                .get('/user/317657452h@126.com')
+                .end(function(err, res) {
+                    let result = _.map(res.body, (account) => {
+                        return { follows: account.follows };
+                    }  );
+                    expect(result).to.include( { follows: ['5bcde909fb6fc060274aedf5'] } );
+                    Collection.collection.remove();
+                    Picture.collection.remove();
+                    User.collection.remove();
                     done();
                 });
         });
@@ -157,46 +192,11 @@ describe('User', () => {
                         return { follows: account.follows };
                     }  );
                     expect(result).to.include( { follows: [] } );
-                    Collection.collection.drop();
-                    Picture.collection.drop();
-                    User.collection.drop();
+                    Collection.collection.remove();
+                    Picture.collection.remove();
+                    User.collection.remove();
                     done();
                 });
         });
     });
-    describe.only('PUT /user/:id/addFollow', () => {
-        it('should return a message and update users', function (done) {
-            chai.request(server)
-                .put('/user/5bcde96cfb6fc060274aee4c/addFollow')
-                .send({'follows': '5bcde909fb6fc060274aedf5'})
-                .end(function (err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.have.property('message')
-                        .equal('You have followed a new user!' );
-                    done();
-                });
-        });
-        after(function  (done) {
-            chai.request(server)
-                .get('/user/317657452@qq.com')
-                .end(function(err, res) {
-                    let result = _.map(res.body, (account) => {
-                        return { fans: account.fans };
-                    }  );
-                    expect(result).to.include( { fans: ['5bcde933fb6fc060274aee1a', '5bcde96cfb6fc060274aee4c'] } );
-                });
-            chai.request(server)
-                .get('/user/317657452h@126.com')
-                .end(function(err, res) {
-                    let result = _.map(res.body, (account) => {
-                        return { follows: account.follows };
-                    }  );
-                    expect(result).to.include( { follows: ['5bcde909fb6fc060274aedf5'] } );
-                    Collection.collection.drop();
-                    Picture.collection.drop();
-                    User.collection.drop();
-                    done();
-                });
-        });
-    })
 })

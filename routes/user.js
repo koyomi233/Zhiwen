@@ -21,7 +21,7 @@ router.findOneById = (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     User.find({ "email" : req.params.email },function(err, account) {
-        if (err)
+        if (err || account.length == 0)
             res.json({ message: 'User NOT Found!', errmsg : err } );
         else
             res.send(JSON.stringify(account, null, 5));

@@ -35,4 +35,33 @@ describe('User', () => {
                 });
         });
     });
+    describe('GET /user/:email', () => {
+        it('should return a user which matched the email', function (done) {
+            chai.request(server)
+                .get('/user/317657452@qq.com')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.a('array');
+                    expect(res.body.length).to.equal(1);
+                    let result = _.map(res.body, (account) => {
+                        return { name: account.name,
+                            email: account.email}
+                    });
+                    expect(result).to.include( { name: 'soundtrack', email: '317657452@qq.com'  } );
+                    done();
+                });
+        });
+        it('should return a message for invalid user email', function (done) {
+            chai.request(server)
+                .get('/user/000000000')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message', 'User NOT Found!' );
+                    Collection.collection.drop();
+                    Picture.collection.drop();
+                    User.collection.drop();
+                    done();
+                });
+        });
+    });
 })

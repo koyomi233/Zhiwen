@@ -68,5 +68,16 @@ Data persistence: MongoDB connection in app.js, line 32. Two databases, whose UR
 
 Git for API testing: Go to the project root directory, and enter “$ git log”on command line.
 
+link to git project: https://github.com/koyomi233/Zhiwen.git
+
+//Reference
+
+https://mherman.org/blog/testing-node-js-with-mocha-and-chai/
+
+https://mongoosejs.com/docs/guide.html
+
+http://huaban.com
+
+
 
 

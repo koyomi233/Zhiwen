@@ -7,7 +7,9 @@ Three models: collection, picture, user
 Relationship: “user” has “collection”, “collection” has “picture”
 
 Function
+
 GET
+
 collection.findAll: get all the collections.
 
 collection.findOneById: get one collection by id.
@@ -29,12 +31,15 @@ user.findOneById: get one user by id.
 user.findByName: get users by name(support fuzzy sarches).
 
 POST
+
 collection.addCollection: add a collection.
+
 picture.addPicture: add a picture, and the size of its collection should + 1.
 
 user.addUser: add a user.
 
 PUT
+
 collection.incrementFollow: change the follow of the collection.
 
 picture.addComment: add a comment to this picture
@@ -48,6 +53,7 @@ user.addBoards: add collections to user.
 user.removeBoards: remove collections from user.
 
 DELETE
+
 collection.deleteCollection: delete a collection, and all the pictures in this collection are deleted too.
 
 picture.deletePicture: delete a picture, and the size of its collection should decrease.
@@ -55,9 +61,11 @@ picture.deletePicture: delete a picture, and the size of its collection should d
 user.deleteUser: delete a user.
 
 Persistence approach adopted
+
 Data persistence: MongoDB connection in app.js, line 32. Two databases, whose URL are defined in server/_config.js, one for testing, one for storing data.
 
 Git approach
+
 Git for API testing: Go to the project root directory, and enter “$ git log”on command line.
 
 
